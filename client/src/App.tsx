@@ -10,6 +10,69 @@ import Input from "./components/Input.tsx";
 import { MdDelete, MdEdit } from "react-icons/md";
 
 import { type Post } from "./__generated__/gql.ts";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 0 auto;
+`;
+
+const FormWrapper = styled.div`
+    display: flex;
+    align-items: end;
+    gap: 20px;
+`;
+
+const InputsWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 20px;
+`;
+
+const InputWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const Button = styled.button`
+    padding: 10px;
+    cursor: pointer;
+    background: #2777ff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+`;
+
+const PostsWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+`;
+
+const Post = styled.div`
+    display: flex;
+    justify-content: space-between;
+    border: 2px solid gray;
+    padding: 15px;
+    border-radius: 5px;
+`;
+const PostContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`;
+
+const PostIcons = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+`;
 
 function App() {
     const { data, loading } = useQuery(GetAllCars);
@@ -83,45 +146,43 @@ function App() {
     };
 
     return (
-        <div className="flex flex-col items-center h-[100dvh] pt-10 gap-5 container mx-auto">
-            <div className="flex items-end gap-4">
-                <div className="flex items-center gap-7">
-                    <div className="flex flex-col">
+        <Wrapper>
+            <FormWrapper>
+                <InputsWrapper>
+                    <InputWrapper>
                         <label htmlFor="title">Title</label>
                         <Input ref={inputRef} id="title" value={title} setValue={setTitle} />
-                    </div>
-                    <div className="flex flex-col">
+                    </InputWrapper>
+                    <InputWrapper>
                         <label htmlFor="description">Description</label>
                         <Input id="description" value={description} setValue={setDescription} />
-                    </div>
-                </div>
-                <button onClick={handleClick} className="bg-blue-500 text-white rounded p-2">
-                    {isEditing ? "Update Post" : "Create Post"}
-                </button>
-            </div>
-            <div className="flex justify-center flex-col gap-3 w-full">
+                    </InputWrapper>
+                </InputsWrapper>
+                <Button onClick={handleClick}>{isEditing ? "Update Post" : "Create Post"}</Button>
+            </FormWrapper>
+            <PostsWrapper>
                 {data?.posts.map((elem: Post) => (
-                    <div key={elem.id} className="flex justify-between border-gray-500 border-[1px] p-5 rounded">
-                        <div>
+                    <Post key={elem.id}>
+                        <PostContent>
                             <div>{elem.title}</div>
                             <div>{elem.description}</div>
-                        </div>
-                        <div className="flex flex-col gap-3">
+                        </PostContent>
+                        <PostIcons>
                             <MdEdit
                                 onClick={() => handleEditPost(elem.id as number, elem.title, elem.description)}
-                                className="cursor-pointer"
+                                style={{ cursor: "pointer" }}
                                 size="1.2rem"
                             />
                             <MdDelete
                                 onClick={() => handleClickDelete(elem.id as number)}
-                                className="cursor-pointer"
+                                style={{ cursor: "pointer" }}
                                 size="1.2rem"
                             />
-                        </div>
-                    </div>
+                        </PostIcons>
+                    </Post>
                 ))}
-            </div>
-        </div>
+            </PostsWrapper>
+        </Wrapper>
     );
 }
 
